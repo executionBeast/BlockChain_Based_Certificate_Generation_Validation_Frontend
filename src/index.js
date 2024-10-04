@@ -2,17 +2,29 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import HomePage from './pages/HomePage';
+
 import {
-  createBrowserRouter,
+  createBrowserRouter,  
   RouterProvider,
+  Route,
+  createRoutesFromElements,
 } from "react-router-dom";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element:<App/>,
-  },
-]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App/>}>     //Layout [Header Outlet Footer ]
+        <Route path="" element={<HomePage/>}/>
+        <Route path="login" element={<LoginPage/>}/>
+        <Route path="signup" element={<SignupPage/>}/>
+
+
+    </Route>
+  )
+
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
