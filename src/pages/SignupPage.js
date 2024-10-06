@@ -10,6 +10,7 @@ const SignupPage = () => {
     email: '',
     phone: '',
     password: '',
+    usertype:''
   });
 
   const [error, setError] = useState('');
@@ -23,15 +24,23 @@ const SignupPage = () => {
     });
   };
 
+  const handleResetForm = ()=>{
+    document.querySelector(".signupform").reset();
+  }
+
   // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // POST request to backend to sign up the user
+      // console.log(formData)
       const response = await axios.post('http://localhost:8000/api/user', formData);
       setSuccess('User registered successfully');
       setError('');
-      console.log(response.data)
+      // console.log(response.data)
+      if(response.data){
+        handleResetForm();
+      }
     } catch (err) {
       setError(err.response ? err.response.data.message : 'Something went wrong!');
       setSuccess('');
@@ -43,7 +52,7 @@ const SignupPage = () => {
       <h2>Sign Up</h2>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
-      <form onSubmit={handleSubmit}>
+      <form className='signupform' onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Username</label>
           <input
@@ -111,6 +120,28 @@ const SignupPage = () => {
             onChange={handleChange}
             required
           />
+          
+        </div>
+        <div className="form-group">
+          <label>Are you?</label>
+          <input
+            type="radio"
+            name="usertype"
+            checked={formData.usertype==="student"}
+            value="student"
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="usertype">Student</label>
+          <input
+            type="radio"
+            name="usertype"
+            value="issuer"
+            checked={formData.usertype==="issuer"}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="usertype">Issuer</label>
         </div>
         <button type="submit">Sign Up</button>
       </form>
