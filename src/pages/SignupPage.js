@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {Navigate} from "react-router-dom";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -48,14 +49,16 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
+    <div className="signup-container w-screen items-center justify-center">
+      <h2 className="text-center text-4xl mt-4">Sign Up</h2>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
-      <form className='signupform' onSubmit={handleSubmit}>
+      <form className='signupform flex flex-col items-center justify-center py-8 space-y-6' onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Username</label>
+          
           <input
+            placeholder="username"
+            className="border border-black rounded-md p-1"
             type="text"
             name="username"
             value={formData.username}
@@ -64,8 +67,9 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label>First Name</label>
           <input
+            placeholder="First name"
+            className="border border-black rounded-md p-1"
             type="text"
             name="firstname"
             value={formData.firstname}
@@ -74,8 +78,10 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label>Middle Name (Optional)</label>
+          
           <input
+            placeholder="Middle name"
+            className="border border-black rounded-md p-1"
             type="text"
             name="middlename"
             value={formData.middlename}
@@ -83,8 +89,9 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label>Last Name (Optional)</label>
           <input
+            placeholder="Last name"
+            className="border border-black rounded-md p-1"
             type="text"
             name="lastname"
             value={formData.lastname}
@@ -92,8 +99,9 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label>Email</label>
           <input
+            placeholder="Email"
+            className="border border-black rounded-md p-1"
             type="email"
             name="email"
             value={formData.email}
@@ -102,8 +110,9 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label>Phone</label>
           <input
+            placeholder="Phone number"
+            className="border border-black rounded-md p-1"
             type="number"
             name="phone"
             value={formData.phone}
@@ -112,8 +121,9 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label>Password</label>
           <input
+            placeholder="Password"
+            className="border border-black rounded-md p-1"
             type="password"
             name="password"
             value={formData.password}
@@ -123,8 +133,9 @@ const SignupPage = () => {
           
         </div>
         <div className="form-group">
-          <label>Are you?</label>
+          <label className='mr-2'>Are you?</label>
           <input
+            className="mx-1"
             type="radio"
             name="usertype"
             checked={formData.usertype==="student"}
@@ -134,6 +145,7 @@ const SignupPage = () => {
           />
           <label htmlFor="usertype">Student</label>
           <input
+            className="mx-1"
             type="radio"
             name="usertype"
             value="issuer"
@@ -143,8 +155,9 @@ const SignupPage = () => {
           />
           <label htmlFor="usertype">Issuer</label>
         </div>
-        <button type="submit">Sign Up</button>
+        <button className="border border-black rounded-md p-1" type="submit">Sign Up</button>
       </form>
+      {success && <Navigate to="/login" replace={true}/>}
     </div>
   );
 };

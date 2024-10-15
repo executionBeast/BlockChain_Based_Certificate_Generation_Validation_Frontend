@@ -12,13 +12,20 @@ import {
   Route,
   createRoutesFromElements,
 } from "react-router-dom";
+import UserDashboardPage from './pages/UserDashboardPage';
+import UserDashboard from './components/UserDashboard';
+
 
 const router = createBrowserRouter(
+
   createRoutesFromElements(
     <Route path="/" element={<App/>}>
         <Route path="" element={<HomePage/>}/>
         <Route path="login" element={<LoginPage/>}/>
         <Route path="signup" element={<SignupPage/>}/>
+        <Route path="user" element={<UserDashboardPage/>}>
+          <Route path="dashboard" element={<UserDashboard/>}/>
+        </Route>
 
 
     </Route>
