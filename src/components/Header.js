@@ -25,6 +25,17 @@ function Header() {
         </NavLink>
       
       </div>
+{/* For Temporary this is added in header it should be removed later when on logg in issuer redirect to it*/}
+      <div className="flex w-stretch space-x-4 mx-4 ">
+        <NavLink
+        to={"issuer-dashboard"}
+        className={`$`}>
+        Issuer-Dashboard
+        </NavLink>
+      
+      </div>
+{/* For Temporary this is added in header it should be removed later when on logg in issuer redirect to it*/}
+
 
       <div className="right mx-4 flex w-stretch space-x-4">
         <NavLink

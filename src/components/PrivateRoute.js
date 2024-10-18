@@ -1,16 +1,16 @@
-import React from 'react'
-import Cookies from "js-cookie";
-import { Navigate } from 'react-router-dom';
-import { Route } from 'react-router-dom';
+// import React from 'react'
+// import Cookies from "js-cookie";
+// import { Navigate } from 'react-router-dom';
+// import { Route } from 'react-router-dom';
 
-// console.log("From index.js ---> ",Cookies.get("loginState"))
+// // console.log("From index.js ---> ",Cookies.get("loginState"))
 
-function PrivateRoute() {
-    const loginState = JSON.stringify(Cookies.get("loginState"))
+// function PrivateRoute() {
+//     const loginState = JSON.stringify(Cookies.get("loginState"))
 
-    return (
-        <Route
-  )
-}
+//     return (
+//         <Route
+//   )
+// }
 
-export default PrivateRoute
+// export default PrivateRoute

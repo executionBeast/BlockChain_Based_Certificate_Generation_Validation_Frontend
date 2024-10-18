@@ -14,7 +14,9 @@ import {
 } from "react-router-dom";
 import UserDashboardPage from './pages/UserDashboardPage';
 import UserDashboard from './components/UserDashboard';
-
+import IssuerDashboard from './pages/IssuerDashboard/Dashboard';
+import Student from './pages/IssuerDashboard/Student';
+import CreateCourse from './pages/IssuerDashboard/CreateCourse';
 
 const router = createBrowserRouter(
 
@@ -25,6 +27,10 @@ const router = createBrowserRouter(
         <Route path="signup" element={<SignupPage/>}/>
         <Route path="user" element={<UserDashboardPage/>}>
           <Route path="dashboard" element={<UserDashboard/>}/>
+        </Route>
+        <Route path="issuer-dashboard" element={<IssuerDashboard/>}>
+            <Route path="students" element={<Student/>}/>
+            <Route path="create-course" element={<CreateCourse/>}/>
         </Route>
 
 
