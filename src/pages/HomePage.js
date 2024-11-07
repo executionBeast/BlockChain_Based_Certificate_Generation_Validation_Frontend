@@ -1,29 +1,13 @@
-import React, { useEffect } from 'react';
-import { LoginContext } from '../context/LoginContext';
-import { useContext } from 'react';
-import Cookies from "js-cookie";
+import React from 'react';
 
 function HomePage() {
-  const {loginState, setLoginState} = useContext(LoginContext)
-
-  useEffect(()=>{
-      
-    try{
-
-      let cookieLoginState = JSON.parse(Cookies.get("loginState"))
-      console.log(cookieLoginState)
-      setLoginState(cookieLoginState)
-    }
-    catch(err){
-      console.log("User is not Logged In");
-    }
-  },[setLoginState])
 
 
   return (
     <div>
-      <h1>HomePage</h1>
-      <h1>{loginState?JSON.stringify(loginState):"Not Logged In"}</h1>
+      <h1 className='text-2xl ' >Welcome</h1>
+      <p>A place to to get your blockchain issued certificate </p>
+
     </div>
   )
 }

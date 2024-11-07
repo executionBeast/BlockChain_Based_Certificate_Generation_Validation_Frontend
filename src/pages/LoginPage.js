@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useContext } from 'react';
 import { LoginContext } from '../context/LoginContext';
-import { Navigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   const {loginState, setLoginState} = useContext(LoginContext);
 
   const [formData, setFormData] = useState({
@@ -16,6 +16,8 @@ const LoginPage = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  // const [user, setUser] = useState({})
+
 
   // Handling input changes
   const handleChange = (e) => {
@@ -26,9 +28,15 @@ const LoginPage = () => {
   };
 
   useEffect(()=>{
-    let cookieloginState = Cookies.get("loginState");
-    setLoginState(cookieloginState)
-  },[success,setLoginState])
+      if(loginState.userdata.usertype==='issuer'){
+          console.log(loginState.userdata.usertype)
+          navigate("/issuer-dashboard")   
+      }
+      if(loginState.userdata.usertype==='student'){
+        navigate("/user-dashboard")   
+    }
+    
+  },[loginState, navigate])
 
   // Form submission handler
   const handleSubmit = async (e) => {
@@ -36,8 +44,10 @@ const LoginPage = () => {
     try {
       // Sending login request to backend
       const response = await axios.post('http://localhost:8000/api/login', formData);
+
       setSuccess('Login successful');
       setError('');
+      // setUser(response.data)
       console.log(response.data)
 
       let cookieData = {
@@ -46,6 +56,12 @@ const LoginPage = () => {
         userdata:response.data.userdata
       }
       Cookies.set("loginState",JSON.stringify(cookieData),{ expires: 7 }) //setting cookies for frontend
+      setLoginState(cookieData)
+      // if(success){
+      //   return loginState?.userdata?.usertype==='issuer'? <Navigate to='/issuer-dashboard'/> : <Navigate to="/" replace={true} />
+
+      // }
+
       // setIsLoggedIn(response.data)
 
 
@@ -93,9 +109,12 @@ const LoginPage = () => {
       </div>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
-      {`Login Status Form Login Context: ${loginState}`}
+      {/* {JSON.stringify(user)} */}
+      {/* {`Login Status Form Login Context: ${loginState}`} */}
 
-      {success && <Navigate to="/" replace={true}/>}
+      {/* {success && loginState.userdata.usertype==='issuer'?<Navigate to="/issuer-dashboard" replace={true}/>:<Navigate to="/login" replace={true}/>}
+      {success && loginState.userdata.usertype==='student'?<Navigate to="/" replace={true}/>:<Navigate to="/login" replace={true}/>}
+       */}
     </div>
 
   );

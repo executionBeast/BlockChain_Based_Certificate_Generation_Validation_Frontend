@@ -11,25 +11,32 @@ import {
   RouterProvider,
   Route,
   createRoutesFromElements,
+  Navigate
 } from "react-router-dom";
-import UserDashboardPage from './pages/UserDashboardPage';
-import UserDashboard from './components/UserDashboard';
+
+import UserDashboardPage from './pages/StudentDashboard.js/UserDashboardPage';
+import CourseEnrollment from './pages/StudentDashboard.js/CourseEnrollment';
 import IssuerDashboard from './pages/IssuerDashboard/Dashboard';
 import Student from './pages/IssuerDashboard/Student';
 import CreateCourse from './pages/IssuerDashboard/CreateCourse';
-
+import Cookies from "js-cookie";
+const cookieLoginState = Cookies.get('loginState');
+// {cookieLoginState ? <HomePage/> : <Navigate to="/login" replace={true}/> }
+// {cookieLoginState ? <IssuerDashboard/>: <Navigate to="/login" replace={true}/>}
 const router = createBrowserRouter(
 
   createRoutesFromElements(
     <Route path="/" element={<App/>}>
         <Route path="" element={<HomePage/>}/>
-        <Route path="login" element={<LoginPage/>}/>
+        <Route path="login" element={cookieLoginState ? <Navigate to="/" replace={true}/> : <LoginPage/>}/>
         <Route path="signup" element={<SignupPage/>}/>
-        <Route path="user" element={<UserDashboardPage/>}>
-          <Route path="dashboard" element={<UserDashboard/>}/>
+
+        <Route path="user-dashboard" element={<UserDashboardPage/>}>   {/*Handle All Student Related <Outlet/> */ }
+          <Route index path="enroll-course" element={<CourseEnrollment/>}/>
         </Route>
+
         <Route path="issuer-dashboard" element={<IssuerDashboard/>}>
-            <Route path="students" element={<Student/>}/>
+            <Route index path="students" element={<Student/>}/>
             <Route path="create-course" element={<CreateCourse/>}/>
         </Route>
 
