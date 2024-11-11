@@ -2,6 +2,7 @@ import React from 'react';
 import Intro from './Intro';
 import Features from './Features';
 import Steps from './Steps';
+import Entity from './Entity';
 function HomePage() {
 
 
@@ -10,8 +11,7 @@ function HomePage() {
       <Intro/>      
       <Features/>
       <Steps/>
-
-      
+      <Entity/>
     </div>
   )
 }

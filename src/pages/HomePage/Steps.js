@@ -25,7 +25,7 @@ const Cards = ({heading, serialnumber, para, cardstyle})=>{
 export default function Steps(){
 
     return (
-        <div className="entity-container max-w-full flex flex-row items-start justify-between space-x-2 py-4 px-16">
+        <div className="mb-64 entity-container max-w-full flex flex-row items-start justify-between space-x-2 py-4 px-16">
 
             <div className="text-area sticky top-16 flex flex-col text-start w-1/2 m-4">
 
