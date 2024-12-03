@@ -2,23 +2,32 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import DashLink from './DashLink';
 
+function Divider(){
+  return(
+    <div 
+    className='h-full border bg-black'></div>
+  )
+}
+
 function IssuerDashboard() {
   return (
-    <div className='issuer-dashboard h-screen w-screen flex flex-row overflow-hidden'>
+    <div className='issuer-dashboard h-screen w-screen flex flex-col overflow-hidden'>
 
-      <div className="links w-1/5 h-full bg-red-900 flex flex-col items-center pt-8 ">
+      <div className="links flex flex-row items-center px-10 gap-8 pt-4 ">
         
-            <DashLink text="List Students" link="students"/>
-            <DashLink text="Course Creation" link="create-course"/>
-            <DashLink text="Certifcate Issuance" link="issuance"/>
-            <DashLink text="Misc" link="misc"/>
+            <DashLink text="View Students" link="students"/>
+            <Divider/>
+            <DashLink text="Create Course" link="create-course"/>
+            <Divider/>
+            <DashLink text="Issue Certificates" link="issuance"/>
+            {/* <DashLink text="Misc" link="misc"/> */}
             
       </div>
 
-      <div className="divider w-px bg-black h-full"></div>
-      <div className="content w-4/5 h-full bg-yellow-900">
+      <div className="content h-full w-full px-10">
         <Outlet/>
       </div>
+
     </div>
   )
 }

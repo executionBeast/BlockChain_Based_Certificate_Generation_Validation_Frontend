@@ -5,7 +5,7 @@ import axios from 'axios';
 import CourseTable from '../../components/CourseTable';
 
 function CourseEnrollment() {
-  const courseUrl = "http://localhost:8000/api/course"
+  const courseUrl = `${process.env.REACT_APP_API_BASE_URL}/course`
   const [courseData, setCourseData] = useState([]);
   const cookieLoginState = Cookies.get("loginState");
   console.log(cookieLoginState)

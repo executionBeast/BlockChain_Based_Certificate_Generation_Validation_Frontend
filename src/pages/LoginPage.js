@@ -33,7 +33,7 @@ const LoginPage = () => {
           navigate("/issuer-dashboard")   
       }
       if(loginState.userdata.usertype==='student'){
-        navigate("/user-dashboard")   
+        navigate("/student-dashboard")   
     }
     
   },[loginState, navigate])
@@ -43,7 +43,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       // Sending login request to backend
-      const response = await axios.post('http://localhost:8000/api/login', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, formData);
 
       setSuccess('Login successful');
       setError('');

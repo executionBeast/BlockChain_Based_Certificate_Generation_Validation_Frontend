@@ -2,38 +2,40 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 function Student() {
 
-    const [userData,setUserData] =useState([]);
-    const url = "http://localhost:8000/api/users";
+    const [userData,setUserData]=useState([]);
+    const url = `${process.env.REACT_APP_API_BASE_URL}/users`;
     
     useEffect(()=>{
-
         const fetchUserData = async ()=>{
             const userdata = await axios.get(url);
             setUserData(userdata.data)
 
         }
-        fetchUserData();
-    },[url])
+            
+
+        fetchUserData();    
+    },[url, setUserData]);
     return (
     
-    <div className='flex flex-col space-x-2 items-center justify-center mt-4'>
-        Student Details Table Page
-        <table className='items-center justify-center mt-2'>
-            <thead>
-                <tr>
-                    <th>username</th>
-                    <th>Firstname</th>
-                    <th>Middlename</th>
-                    <th>Lastname</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>EmailVerified</th>
-                    <th>Phone Verified</th>
+    <div className='flex flex-col mt-6'>
+        <h2 className='font-light text-2xl mt-4'>All Students</h2>
+        
+        <table className='mt-4 bg-[#D1D5DB]'>
+            <thead className=' text-white antialiased text-xl  bg-[#233941]'>
+                <tr className=''>
+                    <th className='font-[400]'>Username</th>
+                    <th className='font-[400]'>Firstname</th>
+                    <th className='font-[400]'>Middlename</th>
+                    <th className='font-[400]'>Lastname</th>
+                    <th className='font-[400]'>Email</th>
+                    <th className='font-[400]'>Phone</th>
+                    <th className='font-[400]'>EmailVerified</th>
+                    <th className='font-[400]'>Phone Verified</th>
 
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody className='text-center'>
             {userData.map((val,index)=>{
             return (
             <tr key={index}>

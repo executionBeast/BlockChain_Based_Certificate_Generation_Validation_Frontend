@@ -35,7 +35,7 @@ const SignupPage = () => {
     try {
       // POST request to backend to sign up the user
       // console.log(formData)
-      const response = await axios.post('http://localhost:8000/api/user', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/signup`, formData);
       setSuccess('User registered successfully');
       setError('');
       // console.log(response.data)

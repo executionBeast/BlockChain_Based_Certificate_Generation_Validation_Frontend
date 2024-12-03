@@ -11,7 +11,7 @@ function EnrollCourseButton({courseid}) {
       courseid:courseid
     }
     console.log("COURSE ENROLL REACT FORM --->",enrollPayload)
-    const rqstEnroll = await axios.post("http://localhost:8000/api/course-enrollment",enrollPayload);
+    const rqstEnroll = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/course-enrollment`,enrollPayload);
     if(rqstEnroll.data){
       alert("Successfully Enrolled For Course!")
     }
