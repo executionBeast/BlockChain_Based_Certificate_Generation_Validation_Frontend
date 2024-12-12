@@ -21,21 +21,18 @@ import IssuerDashboard from './pages/IssuerDashboard/Dashboard';
 import Student from './pages/IssuerDashboard/Student';
 import CreateCourse from './pages/IssuerDashboard/CreateCourse';
 import PrivateRoute from './components/PrivateRoute';
-import LogoutHandler from './components/LogoutHandler';
-import Cookies from "js-cookie";
+import LogoutRoute from './components/LogoutRoute';
+import LoginContextProvider from './context/LoginContextProvider';
 
-const cookieLoginState = Cookies.get('loginState');
-// {cookieLoginState ? <HomePage/> : <Navigate to="/login" replace={true}/> }
-// {cookieLoginState ? <IssuerDashboard/>: <Navigate to="/login" replace={true}/>}
 const router = createBrowserRouter(
 
   createRoutesFromElements(
     <Route path="/" element={<App/>}>
-        <Route path="" element={<HomePage/>}/>
-        <Route path="login" element={cookieLoginState ? <Navigate to="/" replace={true}/> : <LoginPage/>}/>
+        <Route index={true} path="" element={<HomePage/>}/>
+        <Route path="login" element={<LoginPage/>}/>
         <Route path="signup" element={<SignupPage/>}/>
         <Route path="privateroute" element={<PrivateRoute/>}/>
-        <Route path="logoutroute" element={<LogoutHandler/>}/>  
+        <Route path="logoutroute" element={<LogoutRoute/>}/>
 
         <Route path="student-dashboard" element={<UserDashboardPage/>}>   {/*Handle All Student Related <Outlet/> */ }
           <Route index path="enroll-course" element={<CourseEnrollment/>}/>
@@ -55,7 +52,9 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <LoginContextProvider>
+      <RouterProvider router={router} />
+    </LoginContextProvider>
   </React.StrictMode>
 );
 

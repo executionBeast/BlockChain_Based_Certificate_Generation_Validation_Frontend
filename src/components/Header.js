@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react';
 import {NavLink} from 'react-router-dom';
 import logo from '../images/logo.png';
-import Cookies from "js-cookie";
-
+import { LoginContext } from '../context/LoginContextProvider';
 
 function Header() {
-  const loginState = Cookies.get("loginState");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(()=>{
-    try{
-      if(loginState){
-        setIsLoggedIn(true);
-      }
-      else{
-        setIsLoggedIn(false);
-  
-      }
-    }
-    catch(err){
-      alert("error in Header while fetching cookie")
-    }
-  
-  },[loginState,setIsLoggedIn]);
+  const {loginState, login, logout} = useContext(LoginContext);
+
+  console.log("loginState, login , logout ", loginState, login , logout);
   
   return (
     <div className='flex w-screen items-center justify-between  max-h-16  px-8 pt-2'>
@@ -39,7 +24,7 @@ function Header() {
       <div className="flex w-stretch space-x-4 mx-4 ">
         
         <NavLink
-          className="font-medium hover:underline "
+          className="font-medium hover:underline"
           to= {"/privateroute"}>
           Dashboard
         </NavLink>
@@ -47,15 +32,16 @@ function Header() {
       </div>
 
       <div className="right mx-4 flex w-stretch space-x-4">
-       {!isLoggedIn && <NavLink
-        className="border px-4 bg-orange-600 rounded font-medium hover:bg-orange-500"
-        to={"/privateroute"}>
-        Login 
+       {!loginState.isLoggedIn && <NavLink
+          className="border px-4 bg-orange-600 rounded font-medium hover:bg-orange-500"
+          to={"/privateroute"}>
+          Login
+          
         </NavLink>}
-        {isLoggedIn && <NavLink
+
+       {loginState.isLoggedIn && <NavLink
           className={"border px-4 bg-orange-500 rounded font-medium hover:bg-[#E7742E]"}
-          to={"/logoutroute"}
-          >
+          to={"/logoutroute"}>
           Logout
         </NavLink>}
 

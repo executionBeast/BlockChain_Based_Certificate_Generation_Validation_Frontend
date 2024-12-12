@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useState, useContext } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { LoginContext } from '../context/LoginContext';
+import { LoginContext } from '../context/LoginContextProvider';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-
-  const {loginState, setLoginState} = useContext(LoginContext);
+  const {loginState, login} = useContext(LoginContext);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -16,7 +14,6 @@ const LoginPage = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  // const [user, setUser] = useState({})
 
 
   // Handling input changes
@@ -27,44 +24,25 @@ const LoginPage = () => {
     });
   };
 
-  useEffect(()=>{
-      if(loginState.userdata.usertype==='issuer'){
-          console.log(loginState.userdata.usertype)
-          navigate("/issuer-dashboard")   
-      }
-      if(loginState.userdata.usertype==='student'){
-        navigate("/student-dashboard")   
-    }
-    
-  },[loginState, navigate])
-
   // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
+      
       // Sending login request to backend
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, formData);
-
       setSuccess('Login successful');
       setError('');
-      // setUser(response.data)
       console.log(response.data)
 
-      let cookieData = {
+      let loginData = {
         isLoggedIn:true,
         uid:response.data.uid,
         userdata:response.data.userdata
       }
-      Cookies.set("loginState",JSON.stringify(cookieData),{ expires: 7 }) //setting cookies for frontend
-      setLoginState(cookieData)
-      // if(success){
-      //   return loginState?.userdata?.usertype==='issuer'? <Navigate to='/issuer-dashboard'/> : <Navigate to="/" replace={true} />
-
-      // }
-
-      // setIsLoggedIn(response.data)
-
-
+      login(loginData);
+      navigate("/privateroute");
 
       // Do something after successful login, e.g., redirect or store user info
     } catch (err) {
@@ -107,14 +85,8 @@ const LoginPage = () => {
         </div>
       </form>
       </div>
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
-      {/* {JSON.stringify(user)} */}
-      {/* {`Login Status Form Login Context: ${loginState}`} */}
 
-      {/* {success && loginState.userdata.usertype==='issuer'?<Navigate to="/issuer-dashboard" replace={true}/>:<Navigate to="/login" replace={true}/>}
-      {success && loginState.userdata.usertype==='student'?<Navigate to="/" replace={true}/>:<Navigate to="/login" replace={true}/>}
-       */}
+      {`Login Status Form Login Context: ${JSON.stringify(loginState)}`}
     </div>
 
   );

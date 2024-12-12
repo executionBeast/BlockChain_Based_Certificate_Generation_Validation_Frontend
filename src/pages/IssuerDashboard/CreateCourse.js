@@ -1,14 +1,13 @@
 import React,{useState,useContext, useEffect, useCallback} from 'react'
 import axios from 'axios';
-import { LoginContext } from '../../context/LoginContext';
+import { LoginContext } from '../../context/LoginContextProvider';
 import Cookies from "js-cookie";
 import ShowCourse from '../../components/ShowCourse';
-
-
+              
 function CreateCourse() {
   const userCookieData = Cookies.get("loginState");
   const [courseData, setCourseData] = useState([]);
-  const {loginState, setLoginState} = useContext(LoginContext); //at this time loginState is not populated
+  const {loginState, setLoginState} = useContext(LoginContext);   //at this time loginState is not populated
   
 
   const [formData, setFormData] = useState({
@@ -82,7 +81,7 @@ function CreateCourse() {
       }
       catch(err){
         console.log(err)
-      }
+      }                        
       
     })();
     // getCourse();

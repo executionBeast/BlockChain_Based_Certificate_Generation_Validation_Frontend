@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react'
-import Cookies from "js-cookie";
+import React, { useEffect, useContext } from 'react'
+import { LoginContext } from '../context/LoginContextProvider';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-// console.log("From index.js ---> ",Cookies.get("loginState"))
 
 function PrivateRoute() {
+    const {loginState} = useContext(LoginContext);
+
     const navigate = useNavigate();
-    const cookieLoginState = Cookies.get("loginState");
 
     useEffect(()=>{
         try{
-            console.log("Returned Cookie --> ",cookieLoginState);
-            if(cookieLoginState){
-                if(JSON.parse(cookieLoginState).userdata.usertype==="issuer"){
+
+            if(loginState?.isLoggedIn){
+                if(loginState.userdata.usertype==="issuer"){
                     navigate("/issuer-dashboard")
                 }
-                if(JSON.parse(cookieLoginState).userdata.usertype==="student"){
+                if(loginState.userdata.usertype==="student"){
                     navigate("/student-dashboard")
     
                 }
