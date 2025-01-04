@@ -7,7 +7,7 @@ function ShowCourse({courseData}) {
       <table className=' w-full mt-4 bg-[#D1D5DB]'>
         <thead className='text-white antialiased text-md font-[900] bg-[#233941]'>
           <tr className=''>
-            <th className='font-[400] '>Course ID</th>
+            
             <th className='font-[400] '>Course</th>
             <th className='font-[400] '>Certificate</th>
             <th className='font-[400] '>Issuer</th>

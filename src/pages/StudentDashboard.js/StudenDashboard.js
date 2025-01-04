@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import DashLink from './DashLink';
+import DashLink from '../../components/DashLink';
 
 function Divider(){
   return(
@@ -9,17 +9,17 @@ function Divider(){
   )
 }
 
-function IssuerDashboard() {
+function StudentDashboard() {
   return (
     <div className='issuer-dashboard h-screen w-screen flex flex-col overflow-hidden'>
 
       <div className="links flex flex-row items-center px-10 gap-8 pt-4 ">
         
-            <DashLink text="View Students" link="students"/>
+            <DashLink text="Enroll Course" link="enroll-course"/>
             <Divider/>
-            <DashLink text="Create Course" link="create-course"/>
-            <Divider/>
-            <DashLink text="Issue Certificates" link="issuance"/>
+            <DashLink text="Certificates" link="view-certificates"/>
+            {/* <Divider/>
+            <DashLink text="Issue Certificates" link="issuance"/> */}
             {/* <DashLink text="Misc" link="misc"/> */}
             
       </div>
@@ -32,4 +32,4 @@ function IssuerDashboard() {
   )
 }
 
-export default IssuerDashboard;
+export default StudentDashboard;

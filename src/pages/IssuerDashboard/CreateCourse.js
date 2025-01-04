@@ -98,7 +98,7 @@ function CreateCourse() {
       <ShowCourse courseData={courseData}/>
 
       <form className="">
-        <input className={inputStyle} type="text" name="title" onChange={handleChange} value={formData.title} placeholder="Course"></input>
+        <input className={inputStyle} type="text" name="title" onChange={handleChange} value={formData.title} placeholder="Course title"></input>
         <select className="bg-gray-300 rounded font-light" name="certitype" value={formData.certitype} onChange={handleChange}>
           <option value="">Select Certificate Type </option>
           <option value="C1">C1</option>

@@ -8,16 +8,15 @@ import HomePage from './pages/HomePage/HomePage';
 
 
 import {
-  createBrowserRouter,  
+  createBrowserRouter,
   RouterProvider,
   Route,
   createRoutesFromElements,
-  Navigate
 } from "react-router-dom";
 
-import UserDashboardPage from './pages/StudentDashboard.js/UserDashboardPage';
+import StudentDashboard from './pages/StudentDashboard.js/StudenDashboard';
 import CourseEnrollment from './pages/StudentDashboard.js/CourseEnrollment';
-import IssuerDashboard from './pages/IssuerDashboard/Dashboard';
+import IssuerDashboard from './pages/IssuerDashboard/IssuerDashboard';
 import Student from './pages/IssuerDashboard/Student';
 import CreateCourse from './pages/IssuerDashboard/CreateCourse';
 import PrivateRoute from './components/PrivateRoute';
@@ -34,7 +33,7 @@ const router = createBrowserRouter(
         <Route path="privateroute" element={<PrivateRoute/>}/>
         <Route path="logoutroute" element={<LogoutRoute/>}/>
 
-        <Route path="student-dashboard" element={<UserDashboardPage/>}>   {/*Handle All Student Related <Outlet/> */ }
+        <Route path="student-dashboard" element={<StudentDashboard/>}>   {/*Handle All Student Related <Outlet/> */ }
           <Route index path="enroll-course" element={<CourseEnrollment/>}/>
         </Route>
 
