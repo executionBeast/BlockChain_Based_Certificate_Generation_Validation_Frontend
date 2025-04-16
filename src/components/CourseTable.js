@@ -2,8 +2,8 @@ import React from 'react'
 import EnrollCourseButton from './EnrollCourseButton';
 function CourseTable({courseData}) {
   return (
-    <div className='course-table '>
-        <table className="border">
+    <div className='course-table'>
+        <table className="border w-full">
             <thead className='border bg-gray-200'>
                 <tr>
                     <th>Course Name</th>
@@ -12,11 +12,11 @@ function CourseTable({courseData}) {
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="items-center justify-center">
                 {
                     courseData.map((value,index)=>{
                         return(
-                            <tr key={index}>
+                            <tr key={index} class="items-center justify-center">
                                 <td>{value.title}</td>
                                 <td>{value.certitype}</td>
                                 <td>{value.issuerid}</td>

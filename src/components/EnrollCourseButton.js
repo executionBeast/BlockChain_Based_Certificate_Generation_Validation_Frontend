@@ -18,7 +18,7 @@ function EnrollCourseButton({courseid}) {
   }
   return (
     <div>
-      <button onClick={handleEnroll} className='border rounded-sm bg-gray-600 p-1 m-2'> Enroll</button>
+      <button onClick={handleEnroll} className='border rounded-sm bg-gray-200 p-1 m-2'> Enroll</button>
     </div>
   )
 }
