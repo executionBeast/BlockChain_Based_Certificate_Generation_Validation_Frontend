@@ -6,6 +6,7 @@ import CourseTable from '../../components/CourseTable';
 
 function CourseEnrollment() {
   const courseUrl = `${process.env.REACT_APP_API_BASE_URL}/course`   //retrieve all course
+  const issuerUrl = `${process.env.REACT_APP_API_BASE_URL}/users`
   const [courseData, setCourseData] = useState([]);
   const cookieLoginState = Cookies.get("loginState");
   console.log(cookieLoginState)
@@ -22,6 +23,7 @@ function CourseEnrollment() {
           alert(err)
         }
       )
+      
 
 
     

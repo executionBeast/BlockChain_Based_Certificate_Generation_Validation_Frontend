@@ -24,7 +24,7 @@ function ShowCourse({courseData}) {
               key={index}>
                 <td>{course.title}</td>
                 <td>{course.certitype}</td>
-
+                <td>{course.issuername}</td>
               </tr>
             )
           })}

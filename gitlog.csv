@@ -1,0 +1,15 @@
+2025-04-16,some change
+2025-04-15,ready for production
+2025-04-14,changed env
+2025-01-04,latest changes commit
+2024-12-12,Major Changes in State Manangement centralized state loading login and logout functionality in LoginContext
+2024-12-03,major ui change
+2024-11-11,landing page done
+2024-11-11,added the steps section in landing
+2024-11-07,Major Change:[Issuer DashBoard,View Students, Course Creation,Student Dashboard,View Course,Enroll in Course] Commit
+2024-10-18,show all students for issuer implemented
+2024-10-15,Persistent Login Context implemented
+2024-10-06,suijt/frontend login signup complete for both user with logincontext--> need header navigation to check if context pass to other pages and comps
+2024-10-04,basic frontend setup
+2024-10-02,first commit
+2024-09-29,Initialize project using Create React App

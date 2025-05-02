@@ -6,12 +6,14 @@ import ShowCourse from '../../components/ShowCourse';
               
 function CreateCourse() {
   const userCookieData = Cookies.get("loginState");
+  const userdata = JSON.parse(userCookieData).userdata
   const [courseData, setCourseData] = useState([]);
   const {loginState, setLoginState} = useContext(LoginContext);   //at this time loginState is not populated
   
 
   const [formData, setFormData] = useState({
         issuerid:JSON.parse(userCookieData).uid,
+        issuername:`${userdata.firstname} ${userdata.middlename} ${userdata.lastname}`,
         title:"",
         certitype:""
   });
