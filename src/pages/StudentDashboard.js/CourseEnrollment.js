@@ -31,7 +31,7 @@ function CourseEnrollment() {
 
   return (
     <div>
-      <h1 className="text-4xl text-center">Course Enrollment</h1>
+      <h1 className="font-light text-2xl mt-4">Course Enrollment</h1>
       <CourseTable courseData={courseData}/>
     </div>
   )

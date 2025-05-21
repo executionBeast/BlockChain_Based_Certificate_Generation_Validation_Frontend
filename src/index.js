@@ -19,6 +19,7 @@ import CourseEnrollment from './pages/StudentDashboard.js/CourseEnrollment';
 import IssuerDashboard from './pages/IssuerDashboard/IssuerDashboard';
 import Student from './pages/IssuerDashboard/Student';
 import CreateCourse from './pages/IssuerDashboard/CreateCourse';
+import IssueCertificate from './pages/IssuerDashboard/IssueCertificate';
 import PrivateRoute from './components/PrivateRoute';
 import LogoutRoute from './components/LogoutRoute';
 import LoginContextProvider from './context/LoginContextProvider';
@@ -38,8 +39,10 @@ const router = createBrowserRouter(
         </Route>
 
         <Route path="issuer-dashboard" element={<IssuerDashboard/>}>
-            <Route index path="students" element={<Student/>}/>
-            <Route path="create-course" element={<CreateCourse/>}/>
+            <Route index path="students" element={<Student/>}/>   {/**View All Students */}
+            <Route path="create-course" element={<CreateCourse/>}/> {/**create courses */}
+            <Route path="issue-certificate" element={<IssueCertificate/>}/> {/**create courses */}
+
         </Route>
 
 

@@ -11,7 +11,7 @@ function Divider(){
 
 function IssuerDashboard() {
   return (
-    <div className='issuer-dashboard h-screen w-screen flex flex-col overflow-hidden'>
+    <div className='issuer-dashboard h-screen w-screen flex flex-col'>
 
       <div className="links flex flex-row items-center px-10 gap-8 pt-4 ">
         
@@ -19,12 +19,12 @@ function IssuerDashboard() {
             <Divider/>
             <DashLink text="Create Course" link="create-course"/>
             <Divider/>
-            <DashLink text="Issue Certificates" link="issuance"/>
+            <DashLink text="Issue Certificates" link="issue-certificate"/>
             {/* <DashLink text="Misc" link="misc"/> */}
             
       </div>
 
-      <div className="content h-full w-full px-10">
+      <div className="content w-full px-10">
         <Outlet/>
       </div>
 
