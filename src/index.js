@@ -23,7 +23,8 @@ import IssueCertificate from './pages/IssuerDashboard/IssueCertificate';
 import PrivateRoute from './components/PrivateRoute';
 import LogoutRoute from './components/LogoutRoute';
 import LoginContextProvider from './context/LoginContextProvider';
-
+import VerifyCertificate from './pages/VerifyCertificate.js/VerifyCertificate';
+import ViewCertificate from './pages/StudentDashboard.js/ViewCertificate';
 const router = createBrowserRouter(
 
   createRoutesFromElements(
@@ -33,9 +34,11 @@ const router = createBrowserRouter(
         <Route path="signup" element={<SignupPage/>}/>
         <Route path="privateroute" element={<PrivateRoute/>}/>
         <Route path="logoutroute" element={<LogoutRoute/>}/>
+        <Route path="verify-certificate" element={<VerifyCertificate/>}/>
 
         <Route path="student-dashboard" element={<StudentDashboard/>}>   {/*Handle All Student Related <Outlet/> */ }
           <Route index path="enroll-course" element={<CourseEnrollment/>}/>
+          <Route path="view-certificates" element={<ViewCertificate/>}/>
         </Route>
 
         <Route path="issuer-dashboard" element={<IssuerDashboard/>}>

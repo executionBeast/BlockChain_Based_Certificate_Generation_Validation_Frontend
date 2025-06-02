@@ -11,7 +11,7 @@ function Divider(){
 
 function StudentDashboard() {
   return (
-    <div className='issuer-dashboard h-screen w-screen flex flex-col overflow-hidden'>
+    <div className='issuer-dashboard w-screen flex flex-col overflow-hidden'>
 
       <div className="links flex flex-row items-center px-10 gap-8 pt-4 ">
         

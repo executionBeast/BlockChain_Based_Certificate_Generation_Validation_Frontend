@@ -3,16 +3,23 @@ import axios from 'axios';
 import { LoginContext } from '../../context/LoginContextProvider';
 import Cookies from "js-cookie";
 import ShowCourse from '../../components/ShowCourse';
-              
+import { ClipLoader } from 'react-spinners';       
+import {ToastContainer, toast} from "react-toastify";
+// import 'react-toastify/dist'
+import 'react-toastify/dist/ReactToastify.css';
+
 function CreateCourse() {
-  const userCookieData = Cookies.get("loginState");
-  const userdata = JSON.parse(userCookieData).userdata
+  const userCookieData = JSON.parse(Cookies.get("loginState"));
+  const userdata = userCookieData.userdata
+  // console.log("}|}|}|}|}|}|}|}", userdata)
   const [courseData, setCourseData] = useState([]);
   const {loginState, setLoginState} = useContext(LoginContext);   //at this time loginState is not populated
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false)
   
 
   const [formData, setFormData] = useState({
-        issuerid:JSON.parse(userCookieData).uid,
+        issuerid:userdata._id,
         issuername:`${userdata.firstname} ${userdata.middlename} ${userdata.lastname}`,
         title:"",
         certitype:""
@@ -28,7 +35,7 @@ function CreateCourse() {
       console.log("UID",userCookieData.uid) //Fine
       const url  = `${process.env.REACT_APP_API_BASE_URL}/course`
       const res = await axios.get(url,{
-        params:{ issuerid:JSON.parse(userCookieData).uid}
+        params:{ issuerid:userCookieData.uid}
       })
 
       console.log("COURSE DATA ",res.data, userCookieData);
@@ -45,6 +52,7 @@ function CreateCourse() {
   }
 
   const handleSubmit = async (e)=>{
+    setIsSubmitLoading(true)
     e.preventDefault();
     const url = `${process.env.REACT_APP_API_BASE_URL}/course`
     console.log("Form Data",formData)
@@ -52,13 +60,31 @@ function CreateCourse() {
       const res = await axios.post(url, formData)
       console.log("COURSE CREATION REQ RESPONSE",res.data)
       // res.data&&alert("COURSE CREATED");
-      getCourse();
-
-
-
+      await getCourse();
+      if(res.data) {
+      toast("Course Created Successfully",{
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        style:{backgroundColor:'#fff'}
+    })
+    setFormData({...formData, title:'', certitype:""})
+      }
+     
     }
     catch(err){
       console.log("ERROR WHILE CREATING COURSE",err)
+      toast("Error Encountered While Course Creation",{
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            style:{backgroundColor:'#F3733155'}
+      })
+    }
+    finally{
+      setIsSubmitLoading(false)
     }
   }
 
@@ -66,10 +92,13 @@ function CreateCourse() {
 
 
   useEffect(()=>{
+    setIsLoading(true)
+
     ;(async ()=>{
       try{
         console.log("UID",userCookieData.uid) //Fine
         const url  = `${process.env.REACT_APP_API_BASE_URL}/course`
+        setIsLoading(true)
         const res = await axios.get(url,{
           params:{ issuerid:userCookieData.uid}
         })
@@ -77,13 +106,14 @@ function CreateCourse() {
         // console.log("COURSE DATA ",res.data, userCookieData);
         // setCourseData({...res.data, issuername:userCookieData.userdata.username)
         setCourseData(res.data)
-  
-  
-    
+        
       }
       catch(err){
         console.log(err)
-      }                        
+      }               
+      finally {
+        setIsLoading(false)
+      }         
       
     })();
     // getCourse();
@@ -91,13 +121,26 @@ function CreateCourse() {
 
 
   return (
-    <div className='course-creation flex flex-col mt-6'>
-
+    <div className='course-creation flex flex-col mt-2'>
+      <ToastContainer/>
       <h1 className="font-light text-2xl mt-4">
         All Courses
       </h1>
-      
+      {isLoading ? (
+        <div className="mt-6 text-center text-gray-500">            
+          <ClipLoader className='relative right-[20px]' color="#656565" size={28} />
+        </div>
+        
+      )  : courseData.length === 0 ?
+      (<div className='min-h-[212px] w-full mt-4 relative border rounded'>
+          <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-600'>
+            No courses created yet — start by adding your first course!
+          </span>
+        </div> 
+      )
+      :
       <ShowCourse courseData={courseData}/>
+      }
 
       <form className="">
         <input className={inputStyle} type="text" name="title" onChange={handleChange} value={formData.title} placeholder="Course title"></input>
@@ -109,7 +152,13 @@ function CreateCourse() {
           <option value="C4">C4</option>
 
         </select>
-        <button className="border rounded mx-2  px-2 bg-orange-600" type="submit" onClick={handleSubmit}>Submit</button>
+        {isSubmitLoading ? (
+          <ClipLoader className='relative ml-8 top-[4px]' color="#656565" size={20} />
+          
+        ) : (
+          <button className="border rounded mx-2  px-2 bg-orange-600" type="submit" onClick={handleSubmit}>Submit</button>
+        )  
+        }
       </form>
     </div>
   )

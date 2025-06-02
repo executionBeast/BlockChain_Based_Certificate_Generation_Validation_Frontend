@@ -4,7 +4,7 @@ function ShowCourse({courseData}) {
   return (
     <div className='course-table '>
       {/* {JSON.stringify(courseData)} */}
-      <table className=' w-full mt-4 bg-[#D1D5DB]'>
+      <table className=' w-full mt-4 border rounded'>
         <thead className='text-white antialiased text-md font-[900] bg-[#233941]'>
           <tr className=''>
             

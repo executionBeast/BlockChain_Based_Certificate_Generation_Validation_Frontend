@@ -10,7 +10,7 @@ function Header() {
   console.log("loginContext : ",{loginState, login , logout});
   
   return (
-    <div className='flex w-screen items-center justify-between  max-h-16  px-8 pt-2'>
+    <div className='flex w-screen items-center justify-between  max-h-16  px-8 pt-2 bg-[#62E1C0CC]'>
       
       <div className="logo ">
 
@@ -55,3 +55,17 @@ function Header() {
 }
 
 export default Header;
+
+
+  // {!loginState.isLoggedIn && <NavLink
+  //         className="border px-4 bg-orange-600 rounded font-medium hover:bg-orange-500"
+  //         to={currentRoute === "/login" ? "/signup" : "/privateroute"}>
+  //         {currentRoute=== "/login"? "Signup" : "Login"}
+          
+  //       </NavLink>}
+
+  //      {loginState.isLoggedIn && <NavLink
+  //         className={"border px-4 bg-orange-500 rounded font-medium hover:bg-[#E7742E]"}
+  //         to={"/logoutroute"}>
+  //         Logout
+  //       </NavLink>}

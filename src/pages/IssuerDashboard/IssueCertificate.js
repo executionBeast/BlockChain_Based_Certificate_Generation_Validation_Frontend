@@ -2,6 +2,14 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import Cookies from 'js-cookie'
 import html2canvas from "html2canvas"
+import GenerateCertificate from "../../components/GenerateCertificate"
+import htmlToCanvasToBlob from "../../services/htmlToCanvas.services"
+import objectId from 'bson-objectid'
+import { ClipLoader } from 'react-spinners';       
+import {ToastContainer, toast} from "react-toastify";
+// import 'react-toastify/dist'
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function IssueCertificate(){
     const userCookieData = Cookies.get("loginState");
     const userdata = JSON.parse(userCookieData)
@@ -10,17 +18,32 @@ export default function IssueCertificate(){
     const [enrolledStudentsWithCert, setEnrolledStudentsWithCert] = useState([])
     const [certificateParameter, setCertificateParameter] = useState({})
     const [IpfsHash, setIpfsHash] = useState('')
+    const [showCertificate, setShowCertificate] = useState(false)
+
+    //loading user feedback state
+    const [isEnrolledStudentsWithCertificateLoading, setIsEnrolledStudentsWithCertificateLoading] = useState(true)
+    const [isSubmitLoading, setIsSubmitLoading] = useState(false)
+
     const [formData, setFormData] = useState({
+        certID: '',
         issuerid:userdata.uid,
         issuername:`${userdata.userdata.firstname} ${userdata.userdata.middlename} ${userdata.userdata.lastname}`,
         courseid:'',
         coursetitle: '',
         studentid: '',
         studentname:'',
-        certificateurl:''
+        certificatecid:''
     })
+    const [customCertID, setCustomCertID] = useState()
     //Fetch Student Data To Select For Issuance
     //Fetch Course Data To Select For Issuance
+
+    const generateCertID = () => {
+        const id = objectId().toHexString()
+        console.log("Generated ObjectId for Certificate:", id);
+        setCustomCertID(id)
+        return id;
+    }
 
     const getCourse = async ()=>{
         try{
@@ -49,11 +72,23 @@ export default function IssueCertificate(){
             await getCourse();
         })(); 
     },[])
+    
     const getEnrolledStudentsWithCertificate = async () =>{
-        const url = `${process.env.REACT_APP_API_BASE_URL}/get-enrolled-students-certificates`
-        const reqEnrolledStudentsCertificates = await axios.get(url)
-        setEnrolledStudentsWithCert(reqEnrolledStudentsCertificates.data.data)
-        console.log("Enrolled Student With Cert : ", reqEnrolledStudentsCertificates.data.data)
+        try{
+
+            const url = `${process.env.REACT_APP_API_BASE_URL}/get-enrolled-students-certificates`
+            setIsEnrolledStudentsWithCertificateLoading(true)
+            const reqEnrolledStudentsCertificates = await axios.get(url)
+            setEnrolledStudentsWithCert(reqEnrolledStudentsCertificates.data.data)
+            console.log("Enrolled Student With Cert : ", reqEnrolledStudentsCertificates.data.data)
+        }
+        catch(err) {
+            console.log("Func getEnrolledStudentsWithCertificate Error: ", err)
+        }
+        finally {
+            setIsEnrolledStudentsWithCertificateLoading(false)
+        }
+        
     }
 
     const handleChange = (e) =>{
@@ -68,7 +103,7 @@ export default function IssueCertificate(){
                     studentid: value,
                     studentname: selectedStudent? `${selectedStudent.firstname} ${selectedStudent.middlename} ${selectedStudent.lastname}` : " " 
                 })
-                setCertificateParameter(prev => ({...prev, studentname:studentname}))
+                setCertificateParameter(prev => ({...prev, studentname:studentname, issuername: formData.issuername}))
 
                 return {
                 ...prev, 
@@ -91,17 +126,17 @@ export default function IssueCertificate(){
                 coursetitle: selectedCourse? `${selectedCourse.title}` : ""
             }})
         }
-        console.log("FormData : ", formData)
-        setCertificateParameter(prev=> ({...prev, issuername:formData.issuername}))
+        
         
     }
 
     const generateAndUpload = async () =>{
-        const certificateEl = document.getElementById('certificate');
-        const canvas = await html2canvas(certificateEl)
-        const blob  = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
-        const certificateImageForm = new FormData()
-        certificateImageForm.append('file', blob, `Cert_${formData.studentname}_${formData.coursetitle}_${formData.issuername}.png`);
+        // const certificateEl = document.getElementById('certificate');
+        // const canvas = await html2canvas(certificateEl)
+        // const blob  = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
+        // const certificateImageForm = new FormData()
+        // certificateImageForm.append('file', blob, `Cert_${formData.studentname}_${formData.coursetitle}_${formData.issuername}.png`);
+        const certificateImageForm = await htmlToCanvasToBlob('certificate', formData)
         try{
             const pinataUrl ='https://api.pinata.cloud/pinning/pinFileToIPFS'
             const res = await axios.post(pinataUrl,certificateImageForm,
@@ -127,88 +162,133 @@ export default function IssueCertificate(){
         }
     }
 
-    const setCertificate = () =>{
-        setCertificateParameter({studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername})
-    }
-
-    const downloadCertificate = async () =>{
-        const certificateElement = document.getElementById('certificate');
-        const canvas = await html2canvas(certificateElement,{
-            useCORS: true,       // Important for images
-            allowTaint: true,
-            scrollY: -window.scrollY, // Prevent offset issues
-            scale: 1
-        })
-        // const blob  = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
-        const dataUrl = canvas.toDataURL("image/png")
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = "certificate.png"
-        link.click()
-        
-        }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(formData.studentid.length === 0 || formData.courseid === 0 ){
+            return  toast("Please Select Student and Course First",{
+            position: "top-right",
+            autoClose: 500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            style:{backgroundColor:'#F37331'}
+            })
+        }
+        try{
+        let certificateId = generateCertID();
         const url = `${process.env.REACT_APP_API_BASE_URL}/issue-certificate`
-        setCertificateParameter({studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername})
+        console.log("Cert MetaData : ", 
+            {
+                studentname:formData.studentname, 
+                coursename:formData.coursetitle, 
+                issuername:formData.issuername,
+                certificate:"to be updated"
+            })
+        setCertificateParameter({studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername, certificateid: certificateId})
+        setIsSubmitLoading(true)
         let ipfs = await generateAndUpload()
         console.log("RETURNED VALUE OF PINATA IPFS : ", ipfs)
-        setFormData({...formData, certificateurl:ipfs})
-        let payload = {...formData, certificateurl:ipfs}
+        setFormData({...formData, certificateurl:ipfs, certID:certificateId})
+        let payload = {...formData, certificatecid:ipfs, certID:certificateId}
         console.log("Payload : ", payload)
         // const reqIssueCertificate = await axios.post(url, formData)
         const reqIssueCertificate = await axios.post(url, payload)
-        console.log("Issued Certificate Resp: ", reqIssueCertificate.data)
+        // setRespIssueCertificate(reqIssueCertificate.data.data)
+        console.log("Issued Certificate Resp: ", reqIssueCertificate.data.data)
+        let respIssueCertificate = reqIssueCertificate.data.data
+        console.log("CERT DATA WITH QRCODE URL : ",
+            {
+                studentname:respIssueCertificate.studentname, 
+                coursename:respIssueCertificate.coursetitle,
+                issuername:respIssueCertificate.issuername, 
+                certificate: respIssueCertificate
+            })
+        // setCertificateParameter(
+        //     {
+        //         studentname:respIssueCertificate.studentname, 
+        //         coursename:respIssueCertificate.coursetitle, 
+        //         issuername:respIssueCertificate.issuername, 
+        //         certificate: respIssueCertificate
+        //     })
+        // let ipfs = await generateAndUpload()
+        
+
         // alert("Certificate Issued Successfuly"+reqIssueCertificate.data._id)
-        await getEnrolledStudentsWithCertificate();
-    }
-    const GenerateCertificate = ({certificateParameter}) => {
-        const {studentname, coursename, issuername} = certificateParameter
-        return(
-        <div id="certificate" style={{
-            width: '850px', 
-            height: '600px', 
-            fontFamily: 'Poppins, Arial, sans-serif',
-            backgroundImage: "url('/1.png')",
-            backgroundSize: 'cover',
-            position:'relative',
-            display:'inline-block'
-            // opacity:0,
-            }}>
-      
-            
-            <div className="w-full h-[50px] absolute top-[290px] text-center text-4xl tracking-wide">
-                <h1 style={{fontFamily:"Playfair Display, serif"}}>
-                {studentname}</h1>  {/** Name */}
-            </div>
-            
-            <div className="w-full h-[40px] absolute top-[395px] text-center text-3xl">
-                <h1 style={{fontFamily:"Merriweather, serif"}} >{coursename}</h1>
-            </div>
-            
-            <div className="w-full h-[40px] absolute top-[467px] text-center text-3xl">
-                <h1 style={{fontFamily:"Roboto"}} >{issuername}</h1>
-            </div>
-             <div className="w-full h-[40px] absolute top-[545px] text-center text-1xl">
-             <h1 style={{ textAlign: 'center', fontSize:'1em', 
-            }}>{`${String(new Date().getDate()).padStart(2, '0')}/${
-                String(new Date().getMonth() + 1).padStart(2, '0')
-              }/${new Date().getFullYear()}`}</h1>
-            </div>
-            
-           
-        </div>
-        )
+        toast("Certificate Issued Successfully!",{
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            })
+        await getEnrolledStudentsWithCertificate(); 
+        // setShowCertificate(false)
+        }
+        catch(err) {
+        console.log("ERROR ISSUING :", err)
+        toast("Error Encountered While Certificate Issuance!",{
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            style:{backgroundColor:'#F37331'}
+            })
+        }
+        finally {
+        setIsSubmitLoading(false)
+
+        }
+
     }
 
+
+    //    const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const url = `${process.env.REACT_APP_API_BASE_URL}/issue-certificate`
+    //     console.log("Cert MetaData : ", {studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername})
+    //     // setCertificateParameter({studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername})
+    //     let ipfs = await generateAndUpload()
+    //     console.log("RETURNED VALUE OF PINATA IPFS : ", ipfs)
+    //     setFormData({...formData, certificateurl:ipfs})
+    //     let payload = {...formData, certificateurl:ipfs}
+    //     console.log("Payload : ", payload)
+    //     // const reqIssueCertificate = await axios.post(url, formData)
+    //     const reqIssueCertificate = await axios.post(url, payload)
+    //     console.log("Issued Certificate Resp: ", reqIssueCertificate.data)
+    //     // alert("Certificate Issued Successfuly"+reqIssueCertificate.data._id)
+    //     await getEnrolledStudentsWithCertificate(); 
+    //     setShowCertificate(false)
+
+    // }
 
     return(
         <div className='flex flex-col mt-6'>
+        <ToastContainer/>
         <h2 className='font-light text-2xl'>Enrolled Students</h2>
         
+        {
+            isEnrolledStudentsWithCertificateLoading ? (
+            <div className="mt-6 text-center text-gray-500">            
+                <ClipLoader className='relative right-[20px]' color="#656565" size={28} />
+            </div>
+        )  : enrolledStudentsWithCert.length === 0 ? 
+        (
+        <div className='min-h-[212px] w-full mt-4 relative border rounded'>
+          <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-600'>
+          {courseData.length === 0 ? 
+            'No courses created yet — added course will be enrolled by students then issuance'
+           :
+            'No enrollments yet -- Encourage students to enroll in your courses'
+            }
+            
+          </span>
+        </div> 
+        ) 
+        :
+        
+        (
         <table className='mt-4 '>
-            <thead className=' text-black antialiased text-xl bg-gray-200'>
+        <thead className='text-white antialiased text-md font-[900] bg-[#233941]'>
+            {/* <thead className=' text-black antialiased text-xl bg-gray-200'> */}
                 <tr className=''>
                     <th>Username</th>
                     <th>Fullname</th>
@@ -229,11 +309,22 @@ export default function IssueCertificate(){
             <td className="py-2">{val.email}</td>
             <td className="py-2">{val.phone}</td>
             <td className="py-2">{val.courseEnrolled}</td>
-            <td className="py-2">{val.issuedCertificate}</td>
+            <td className="py-2">
+                {val.issuedCertificate === "Not Issued" ? (
+                <span className="text-red-500">{val.issuedCertificate}</span>
+                ) : 
+                (
+                <a className="text-green-500" href={`https://sapphire-adorable-peacock-363.mypinata.cloud/ipfs/${val.issuedCertificate}`} target="_blank ">🔗Issued</a>
+                )}
+            </td>
             </tr>)
         })}
             </tbody>
         </table>
+        )
+        }
+
+
         <div className="issue-certificate-form mt-8" >
         <h2 className='font-light text-2xl'>Issue Certificate</h2>
 
@@ -248,15 +339,19 @@ export default function IssueCertificate(){
             {courseData.map(course=> <option value={course._id}>{course.title}</option>)}
 
             </select>
-            <button className="border rounded mx-2  px-2 bg-orange-600" type="submit" onClick={handleSubmit}>Issue Certificate</button>
+            {isSubmitLoading ? 
+            <ClipLoader className='relative right-[0px]' color="#656565" size={24} /> 
+            :
+            <button disabled={courseData.length !== 0 && enrolledStudentsData !== 0 ? false : true} className="border rounded mx-2  px-2 bg-orange-600" type="submit" onClick={handleSubmit}>Issue Certificate</button>
+            }   
         </form>
         </div>
         {/* <GenerateCertificate certificateParameter={{studentname:"Sujit Kumar", coursename:"Web2.0 Cohort", issuername:"Shyam Kumar"}}/> */}
         <div>
-            <button className="border bg-gray-400 rounded my-2 px-2" position="relative" onClick={setCertificate}>Set Certificate</button>
-            <button className="border bg-gray-400 rounded m-2 px-2" position="relative" onClick={downloadCertificate}>Download Certificate</button>
+            <button className="border bg-gray-400 rounded my-2 px-2 "  position="relative" onClick={()=>{setShowCertificate(true)}}>Preview Certificate</button>
+            {/* <button className="border bg-gray-400 rounded m-2 px-2" position="relative" onClick={downloadCertificate}>Download Certificate</button> */}
         </div>
-        {certificateParameter && <GenerateCertificate certificateParameter={certificateParameter}/>}
+        {certificateParameter && <GenerateCertificate showCertificate={showCertificate} certificateParameter={certificateParameter}/>}
 
         
     </div>
