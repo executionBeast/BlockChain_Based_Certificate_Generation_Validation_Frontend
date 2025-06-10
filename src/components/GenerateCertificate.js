@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
  
  const GenerateCertificate = ({showCertificate, certificateParameter}) => {
-        const {studentname, coursename, issuername, certificateid} = certificateParameter 
+        const {studentname, coursename, issuername, certID} = certificateParameter 
         console.log("LOG OF CERTIFICATE PARAMETER FROM GENCEERT COMPONENT", certificateParameter)
         const setQRCODEText = () =>{
         const qrcode = document.getElementById("qrcode");
@@ -29,7 +29,7 @@ import { useEffect } from "react";
                 {studentname}</h1>  {/** Name */}
             </div>
             
-            <QRCODE.QRCodeCanvas id="qrcode" className="absolute bottom-[129px]  left-[25px] h-[94px] w-[94px] bg-blue-500" value={`https://bcertify.vercel.app/verify-certificate/${certificateid}`} size={89}/>
+            <QRCODE.QRCodeCanvas id="qrcode" className="absolute bottom-[129px]  left-[25px] h-[94px] w-[94px] bg-blue-500" value={`https://bcertify.vercel.app/verify-certificate/${certID}`} size={89}/>
 
             <div className="w-full h-[40px] absolute top-[395px] text-center text-3xl">
                 <h1 style={{fontFamily:"Merriweather, serif", color:"#212121ee"}} >{coursename}</h1>

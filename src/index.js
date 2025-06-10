@@ -34,7 +34,7 @@ const router = createBrowserRouter(
         <Route path="signup" element={<SignupPage/>}/>
         <Route path="privateroute" element={<PrivateRoute/>}/>
         <Route path="logoutroute" element={<LogoutRoute/>}/>
-        <Route path="verify-certificate" element={<VerifyCertificate/>}/>
+        <Route path="verify-certificate/:certificateid" element={<VerifyCertificate/>}/>
 
         <Route path="student-dashboard" element={<StudentDashboard/>}>   {/*Handle All Student Related <Outlet/> */ }
           <Route index path="enroll-course" element={<CourseEnrollment/>}/>

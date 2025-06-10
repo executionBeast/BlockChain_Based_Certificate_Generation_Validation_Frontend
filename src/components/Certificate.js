@@ -21,6 +21,7 @@ const Certificate = ({ certificate, isLoading }) => {
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >
+            {/* {JSON.stringify(certificate)} */}
             
             {isLoading ? (
                 <ClipLoader className="relative right-[0px]" color="#656565" size={24} />

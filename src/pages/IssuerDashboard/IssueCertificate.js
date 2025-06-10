@@ -16,9 +16,13 @@ export default function IssueCertificate(){
     const [enrolledStudentsData,setEnrolledStudentsData]=useState([])
     const [courseData, setCourseData] = useState([])
     const [enrolledStudentsWithCert, setEnrolledStudentsWithCert] = useState([])
-    const [certificateParameter, setCertificateParameter] = useState({})
+    const [certificateParameter, setCertificateParameter] = useState({certID: objectId().toHexString()})
     const [IpfsHash, setIpfsHash] = useState('')
     const [showCertificate, setShowCertificate] = useState(false)
+
+    //cert
+    // const [certID, setCertID] = useState(objectId().toHexString())
+    
 
     //loading user feedback state
     const [isEnrolledStudentsWithCertificateLoading, setIsEnrolledStudentsWithCertificateLoading] = useState(true)
@@ -175,34 +179,35 @@ export default function IssueCertificate(){
             })
         }
         try{
-        let certificateId = generateCertID();
+        // let certificateId = generateCertID();
         const url = `${process.env.REACT_APP_API_BASE_URL}/issue-certificate`
         console.log("Cert MetaData : ", 
             {
                 studentname:formData.studentname, 
                 coursename:formData.coursetitle, 
                 issuername:formData.issuername,
-                certificate:"to be updated"
+                certificateid:certificateParameter.certID
             })
-        setCertificateParameter({studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername, certificateid: certificateId})
+        setCertificateParameter(prev=> ({...prev, studentname:formData.studentname, coursename:formData.coursetitle, issuername:formData.issuername}))
         setIsSubmitLoading(true)
         let ipfs = await generateAndUpload()
         console.log("RETURNED VALUE OF PINATA IPFS : ", ipfs)
-        setFormData({...formData, certificateurl:ipfs, certID:certificateId})
-        let payload = {...formData, certificatecid:ipfs, certID:certificateId}
+        setFormData({...formData, certificatecid:ipfs, certID:certificateParameter.certID})
+        let payload = {...formData, certificatecid:ipfs, certID:certificateParameter.certID}
         console.log("Payload : ", payload)
         // const reqIssueCertificate = await axios.post(url, formData)
         const reqIssueCertificate = await axios.post(url, payload)
         // setRespIssueCertificate(reqIssueCertificate.data.data)
         console.log("Issued Certificate Resp: ", reqIssueCertificate.data.data)
         let respIssueCertificate = reqIssueCertificate.data.data
-        console.log("CERT DATA WITH QRCODE URL : ",
-            {
-                studentname:respIssueCertificate.studentname, 
-                coursename:respIssueCertificate.coursetitle,
-                issuername:respIssueCertificate.issuername, 
-                certificate: respIssueCertificate
-            })
+        setCertificateParameter({certID:objectId().toHexString()})
+        console.log("CERT DATA WITH QRCODE URL : ", respIssueCertificate)
+            // {
+            //     studentname:respIssueCertificate.studentname, 
+            //     coursename:respIssueCertificate.coursetitle,
+            //     issuername:respIssueCertificate.issuername, 
+            //     certificate: respIssueCertificate
+            // }
         // setCertificateParameter(
         //     {
         //         studentname:respIssueCertificate.studentname, 
@@ -220,6 +225,9 @@ export default function IssueCertificate(){
             hideProgressBar: true,
             closeOnClick: true,
             })
+        //renew certID
+        // setCertID(objectId().toHexString())
+
         await getEnrolledStudentsWithCertificate(); 
         // setShowCertificate(false)
         }
@@ -235,7 +243,12 @@ export default function IssueCertificate(){
         }
         finally {
         setIsSubmitLoading(false)
-
+        setFormData(prev => ({...prev, 
+            courseid:'',
+            coursetitle: '',
+            studentid: '',
+            studentname:'',
+        }))
         }
 
     }
